@@ -41,6 +41,8 @@ flowchart LR
 
 The platform separates complaint intake, identity and access, operational management, reporting, and audit history. Each business service owns its data store, while Eureka provides service discovery and the gateway is the public entry point.
 
+For the complete component map, request sequence, data ownership model, and operational considerations, see the [detailed architecture document](docs/architecture.md).
+
 ## General installation
 
 The source code is distributed across the repositories listed below. A complete local environment requires Java 21, Maven, MySQL, RabbitMQ, and a running Eureka server. Node.js and npm are additionally required for the React frontend.
@@ -126,7 +128,7 @@ The general process above establishes the platform order, but each service has i
 
 The documents below follow the logical flow of the platform:
 
-1. [Frontend reference](docs/frontend.md) — user and administrator interface.
+1. [Frontend reference](docs/frontend.md) — user and administrator interface. See the [complete frontend documentation](docs/frontend.md) for its modules, responsibilities, and relationship with the backend.
 2. [API Gateway](docs/services/api-gateway.md) — public entry point and routing layer.
 3. [Service Discovery](docs/services/service-discovery.md) — Eureka registry used by the services.
 4. [Authentication](docs/services/authentication.md) — login, password recovery, administrator profiles, and documents.
