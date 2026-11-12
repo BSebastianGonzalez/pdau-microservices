@@ -26,6 +26,70 @@ The service integrates with the registration and authentication services through
 - Audit event classes (`RespuestaAuditEvent`, `ComentarioAuditEvent`, `ApelacionAuditEvent`, `ArchivamientoAuditEvent`, and related events) publish activity for the audit service.
 - RabbitMQ configuration supports asynchronous coordination with the register, reports, and audit services.
 
+## Entities
+
+| Entity | Purpose |
+|---|---|
+| `Respuesta` | Administrative response to a complaint, including author, detail, date, and attachments |
+| `ArchivoRespuesta` | File attached to an administrative response |
+| `Comentario` | Internal or workflow comment associated with a complaint |
+| `Apelacion` | Appeal submitted for a complaint, including its files and result |
+| `ArchivoApelacion` | File attached to an appeal |
+| `RespuestaApelacion` | Administrative answer to an appeal |
+| `ArchivoRespuestaApelacion` | File attached to an appeal response |
+| `ArchivamientoDenuncia` | Archive/unarchive record, administrator, justification, and reason |
+| `IndicadorGestion` | Generated management indicator |
+
+The service stores foreign identifiers such as `denunciaId` and `adminId`; it does not share the authentication or register service databases.
+
+## API guide
+
+Base URL when accessed directly: `http://localhost:3000`.
+
+### Responses
+
+| Method | Endpoint | Body or parameters | Function |
+|---|---|---|---|
+| `POST` | `/api/respuestas` | Multipart `denunciaId`, `adminId`, `detalle`, optional `files` | Creates an administrative response |
+| `GET` | `/api/respuestas/{denunciaId}` | Path `denunciaId` | Gets the response for a complaint |
+| `GET` | `/api/respuestas/{respuestaId}/archivos` | Path `respuestaId` | Lists response files and visualization URLs |
+
+### Comments
+
+| Method | Endpoint | Body or parameters | Function |
+|---|---|---|---|
+| `POST` | `/api/comentarios` | JSON `Comentario` | Creates a comment |
+| `GET` | `/api/comentarios/denuncia/{idDenuncia}` | Path `idDenuncia` | Lists comments for a complaint |
+| `DELETE` | `/api/comentarios/{id}` | Path `id` | Deletes a comment |
+
+### Appeals and appeal responses
+
+These operations use `multipart/form-data`; the `data` part contains the corresponding DTO and `files` is optional.
+
+| Method | Endpoint | Body or parameters | Function |
+|---|---|---|---|
+| `POST` | `/api/apelaciones` | Part `data` as `ApelacionDTO`, optional `files` | Creates an appeal |
+| `GET` | `/api/apelaciones/denuncia/{denunciaId}` | Path `denunciaId` | Gets the appeal for a complaint |
+| `POST` | `/api/respuestas-apelacion` | Part `data` as `RespuestaApelacionDTO`, optional `files` | Answers an appeal |
+| `GET` | `/api/respuestas-apelacion/denuncia/{denunciaId}` | Path `denunciaId` | Gets the appeal response for a complaint |
+
+### Archive and unarchive
+
+| Method | Endpoint | Body or parameters | Function |
+|---|---|---|---|
+| `POST` | `/api/archivar` | Query `denunciaId`, `adminId`, `justificacion` | Archives a complaint |
+| `GET` | `/api/archivar` | — | Lists archive records |
+| `GET` | `/api/archivar/denuncia/{denunciaId}` | Path `denunciaId` | Gets the archive record for a complaint |
+| `PUT` | `/api/archivar/{denunciaId}/desarchivar` | Query `adminId`, `motivo` | Reopens an archived complaint |
+
+### Management indicators
+
+| Method | Endpoint | Body or parameters | Function |
+|---|---|---|---|
+| `POST` | `/api/indicadores/generar` | — | Generates a new management indicator |
+| `GET` | `/api/indicadores` | — | Lists generated indicators |
+| `GET` | `/api/indicadores/{id}` | Path `id` | Gets an indicator |
+
 ## Main flow
 
 1. An administrator selects a complaint already registered by the intake service.

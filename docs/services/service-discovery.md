@@ -19,6 +19,17 @@ It is configured not to register itself as a client or fetch a registry from ano
 
 There are no domain controllers, entities, or repositories because the service manages the service registry rather than PDAU business data.
 
+## API guide
+
+Eureka is an infrastructure registry rather than a business API. It does not expose PDAU domain resources. Its web interface is available at:
+
+| Method | Endpoint | Function |
+|---|---|---|
+| `GET` | `/` | Opens the Eureka dashboard |
+| `GET` | `/eureka/apps` | Returns registered applications in Eureka's registry format |
+
+The gateway and Eureka clients use the registry protocol automatically. Applications should normally consume the registry through their configured `SERVICE_DISCOVERY` URL instead of calling these endpoints manually.
+
 ## Main flow
 
 1. The discovery server starts on port `8761`.

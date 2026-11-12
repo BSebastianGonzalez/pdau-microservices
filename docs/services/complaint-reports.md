@@ -21,6 +21,25 @@ Because the gateway also declares port `8000` by default, deployment configurati
 - `ReporteDenunciaRepository` provides persistence and query operations for the projection.
 - Event DTOs describe the minimum data needed to update the projection.
 
+## Entities
+
+| Entity | Purpose |
+|---|---|
+| `ReporteDenuncia` | Local projection of complaint data used for aggregations by state, category, and date |
+
+The projection is populated from events rather than by querying the complaint register database.
+
+## API guide
+
+Base URL when accessed directly: `http://localhost:8000`.
+
+| Method | Endpoint | Body or parameters | Function |
+|---|---|---|---|
+| `GET` | `/api/reportes/denuncias/total` | — | Returns the total number of complaints |
+| `GET` | `/api/reportes/denuncias/por-estado` | — | Returns a map with complaint counts grouped by state |
+| `GET` | `/api/reportes/denuncias/por-categoria` | — | Returns a map with complaint counts grouped by category |
+| `GET` | `/api/reportes/denuncias/por-fechas` | Query `inicio` and `fin` as ISO dates (`YYYY-MM-DD`) | Returns the number of complaints created within a date range |
+
 ## Main flow
 
 1. The register service publishes an event when a complaint is created or its state changes.

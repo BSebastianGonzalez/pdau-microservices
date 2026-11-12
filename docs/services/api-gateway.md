@@ -20,6 +20,20 @@ The gateway should be the only backend component exposed directly to the browser
 
 There are no business entities or JPA repositories in this component because it does not own domain data.
 
+## API guide
+
+The gateway does not declare business controllers. Its API is the dynamically discovered API of the registered services, exposed through the gateway's service routes. The exact public path depends on the service ID registered in Eureka and the gateway discovery-locator configuration.
+
+In addition, Actuator exposes operational endpoints:
+
+| Method | Endpoint | Function |
+|---|---|---|
+| `GET` | `/actuator/health` | Checks gateway health |
+| `GET` | `/actuator/info` | Returns application information |
+| `GET` | `/actuator/gateway` | Inspects gateway routes and configuration |
+
+The gateway forwards the business endpoints documented in the other service guides. It should not be used as a replacement for their API contracts.
+
 ## Main flow
 
 1. The frontend sends an HTTP request to the gateway.

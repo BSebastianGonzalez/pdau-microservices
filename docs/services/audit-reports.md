@@ -21,6 +21,41 @@ The service is intended for traceability and historical analysis rather than pri
 - `TotalesDTO` and `AdminTotalesDTO` shape aggregated responses.
 - Each audit repository isolates persistence for its activity type.
 
+## Entities
+
+| Entity | Purpose |
+|---|---|
+| `AuditoriaRespuesta` | Historical record of an administrative response |
+| `AuditoriaComentario` | Historical record of an administrator comment |
+| `AuditoriaApelacion` | Historical record of an appeal |
+| `AuditoriaArchivamiento` | Historical record of an archive or unarchive action |
+| `AuditoriaRespuestaApelacion` | Historical record of an appeal response |
+
+## API guide
+
+Base URL when accessed directly: `http://localhost:3001`. This controller does not define a class-level `/api` prefix.
+
+### Aggregated totals
+
+| Method | Endpoint | Body or parameters | Function |
+|---|---|---|---|
+| `GET` | `/totales` | — | Returns global totals by activity type |
+| `GET` | `/totales/rango` | Query `start` and `end` | Returns totals in a date range |
+| `GET` | `/admin/{adminId}/totales` | Path `adminId` | Returns totals for one administrator |
+| `GET` | `/admin/{adminId}/totales/rango` | Path `adminId`, query `start` and `end` | Returns administrator totals in a date range |
+
+For `start` and `end`, use an ISO instant such as `2025-12-01T00:00:00Z`, or a local ISO date-time such as `2025-12-01T00:00:00`.
+
+### Activity records
+
+| Method | Endpoint | Function |
+|---|---|---|
+| `GET` | `/admin/{adminId}/respuestas` | Lists responses recorded for an administrator |
+| `GET` | `/admin/{adminId}/archivamientos` | Lists archive actions recorded for an administrator |
+| `GET` | `/admin/{adminId}/comentarios` | Lists comments recorded for an administrator |
+| `GET` | `/admin/{adminId}/respuestas-apelacion` | Lists appeal responses recorded for an administrator |
+| `GET` | `/apelaciones` | Lists recorded appeals |
+
 ## Main flow
 
 1. The management service performs an auditable action such as responding, commenting, appealing, or archiving.
